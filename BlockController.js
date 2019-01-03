@@ -19,6 +19,7 @@ class BlockController {
         this.getBlockByIndex()
         this.postNewBlock()
         this.requestValidation()
+        this.validate()
     }
 
     /**
@@ -114,7 +115,7 @@ class BlockController {
         self.app.post("/validate", (req, res) => {
             let data = req.body
             console.log("req.body: " + JSON.stringify(data))
-            Mempool.validateRequestByWallet(req);
+            self.myMempool.validateRequestByWallet(req);
         });
     }
 

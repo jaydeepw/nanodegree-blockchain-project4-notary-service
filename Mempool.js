@@ -1,41 +1,70 @@
-const BlockChain = require('./BlockChain.js');
-const Block = require('./Block.js');
-const TimeoutRequestsWindowTime = 5*60*1000;    // 5 minutes
+const BlockChain = require('./BlockChain.js')
+const Block = require('./Block.js')
+const bitcoinMessage = require('bitcoinjs-message'); 
+
+// Constants
+const TimeoutRequestsWindowTime = 5*60*1000    // 5 minutes
 
 class Mempool {
 
     constructor() {
-        this.mempool = [];
-        this.timeoutRequests = [];
+        this.mempool = []
+        this.timeoutRequests = []
+        this.mempoolValid = []
     }
 
+    exists(request) {
+        for(var key in this.mempool) {
+            // console.log("key: " + key);
+            if(key == request.address)
+                return true
+        }
+
+        return false;
+    }
+
+    setValidationWindowTime(updatedRequest, timeElapse) {
+        let timeLeft = (TimeoutRequestsWindowTime/1000) - timeElapse
+        updatedRequest.validationWindow = timeLeft
+    }
+
+    /**
+     * Add a request for validation to mempool
+     * @param {*} request 
+     */
     addRequestValidation(request) {
-        // store only one request of the address
-        this.mempool.push(request)
-        this.setTimeOut(request)
 
-        let updatedReq = {}
-        updatedReq.walletAddress = request.address
-        updatedReq.requestTimeStamp = request.requestTimeStamp
-        console.log(new Date().getTime())
-        /* = new Date().getTime()
-        console.log(updatedReq.requestTimeStamp)
-         
-        let timeElapse = new Date().getTime() - request.requestTimeStamp
-        console.log("timeElapse: " + timeElapse)
-        let timeLeft = TimeoutRequestsWindowTime - timeElapse
-        console.log("timeLeft: " + timeLeft)
-        updatedReq.validationWindow = timeLeft */
-        let timeElapse = (new Date().getTime().toString().slice(0,-3)) - request.requestTimeStamp;
-        let timeLeft = (TimeoutRequestsWindowTime/1000) - timeElapse;
-        updatedReq.validationWindow = timeLeft;
+        let updatedRequest = {}
+        updatedRequest.walletAddress = request.address
+        
+        if(this.exists(request)) {
+            console.log("Request already exists")
+            // if same address sends another request,
+            // update time left before this request timesout
+            // and resent the same
+            request = this.mempool[request.address]
+            updatedRequest.requestTimeStamp = request.requestTimeStamp
+            updatedRequest.message = updatedRequest.walletAddress + ":" + request.requestTimeStamp
+                                + ":starRegistry"
 
-        updatedReq.message = request.address + ":" + request.requestTimeStamp
-                            + ":starRegistry"
-        /* console.log("request.requestTimeStamp " + request.requestTimeStamp + 
-            " updatedReq.walletAddress " + updatedReq.walletAddress + 
-            " timeLeft " + timeLeft) */
-        return updatedReq
+            let timeElapse = (new Date().getTime().toString().slice(0,-3)) - updatedRequest.requestTimeStamp
+            this.setValidationWindowTime(updatedRequest, timeElapse)
+
+            console.log(request.address)
+            console.log(request)
+        } else {
+            console.log(new Date().getTime())
+            updatedRequest.requestTimeStamp = (new Date().getTime().toString().slice(0,-3))
+            let timeElapse = (new Date().getTime().toString().slice(0,-3)) - updatedRequest.requestTimeStamp
+            this.setValidationWindowTime(updatedRequest, timeElapse)
+
+            updatedRequest.message = updatedRequest.walletAddress + ":" + updatedRequest.requestTimeStamp
+            + ":starRegistry"
+            console.log("Adding as a new request")
+            this.mempool[request.address] = updatedRequest
+            this.setTimeOut(updatedRequest)
+        }
+        return updatedRequest
     }
 
     setTimeOut(request) {
@@ -43,7 +72,7 @@ class Mempool {
         this.timeoutRequests[request.address] = setTimeout(function() { 
             self.removeValidationRequest(request.address)
         }, TimeoutRequestsWindowTime)
-        console.log("Added timeout for this request")
+        // console.log("Added timeout for this request")
     }
 
     removeTimeOut() {
@@ -55,8 +84,8 @@ class Mempool {
         this.mempool.pop(request)
     }
 
-    validateRequest() {
-
+    verifyTimeLeft(request) {
+        return (request.validationWindow > 0);
     }
 
     validateRequestByWallet(request) {
@@ -71,8 +100,21 @@ class Mempool {
                 "messageSignature": true
             }
         } */
-        this.verifyTimeLeft()
-        // bitcoinMessage.verify()
+
+        let invalidResponse = {}
+
+        // verify time left
+        if(!this.verifyTimeLeft()) {
+            invalidResponse.message = "Timedout request"
+        }
+
+        // verify signature
+        /* let isValid = bitcoinMessage.verify(message, address, signature);
+        if(!isValid) {
+            invalidResponse.message = "Invalid request"
+        } */
+
+        // remove timeout
     }
 
 }
