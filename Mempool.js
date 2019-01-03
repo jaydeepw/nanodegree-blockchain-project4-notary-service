@@ -18,11 +18,16 @@ class Mempool {
      * Check if the request exists in the Mempool
      * @param {*} request 
      */
-    exists(request) {
+    existsInMempool(request) {
         for(var key in this.mempool) {
-            // console.log("key: " + key);
-            if(key == request.address)
-                return true
+            let address = request.address
+            if(key == address) {
+                let value = this.mempool[address]
+                console.log("value: " + value)
+                if(value != null) {
+                    return true
+                }
+            }
         }
 
         return false;
@@ -33,6 +38,11 @@ class Mempool {
         updatedRequest.validationWindow = timeLeft
     }
 
+    /**
+     * Get the request from the mempool, while making
+     * sure that the validationWindow time has always been updated.
+     * @param {*} address 
+     */
     getFromMempool(address) {
         let request = this.mempool[address]
         let timeElapse = (new Date().getTime().toString().slice(0,-3)) - request.requestTimeStamp
@@ -49,30 +59,23 @@ class Mempool {
         let updatedRequest = {}
         updatedRequest.walletAddress = request.address
         
-        if(this.exists(request)) {
+        if(this.existsInMempool(request)) {
             console.log("Request already exists")
             // if same address sends another request,
             // update time left before this request timesout
             // and resent the same
-            request = this.mempool[request.address]
-            updatedRequest.requestTimeStamp = request.requestTimeStamp
-            updatedRequest.message = updatedRequest.walletAddress + ":" + request.requestTimeStamp
-                                + ":starRegistry"
-
-            let timeElapse = (new Date().getTime().toString().slice(0,-3)) - updatedRequest.requestTimeStamp
-            this.setValidationWindowTime(updatedRequest, timeElapse)
-
-            console.log(request.address)
-            console.log(request)
+            updatedRequest = this.getFromMempool(request.address)
+            /* console.log(updatedRequest.address)
+            console.log(updatedRequest) */
         } else {
             console.log("Adding as a new request")
-            console.log(new Date().getTime())
             updatedRequest.requestTimeStamp = (new Date().getTime().toString().slice(0,-3))
             let timeElapse = (new Date().getTime().toString().slice(0,-3)) - updatedRequest.requestTimeStamp
             this.setValidationWindowTime(updatedRequest, timeElapse)
 
             updatedRequest.message = updatedRequest.walletAddress + ":" + updatedRequest.requestTimeStamp
             + ":starRegistry"
+            // add the request to Mempool
             this.mempool[request.address] = updatedRequest
             this.setTimeOut(updatedRequest)
         }
@@ -88,9 +91,10 @@ class Mempool {
     }
 
     removeValidationRequest(address) {
-        this.mempool[address] = null
+        delete this.mempool[address]
         console.log("Removed request from the mempool")
-        this.timeoutRequests[address] = null
+        console.log(this.mempool)
+        delete this.timeoutRequests[address]
         console.log("Remove timeout for this request")
     }
     
@@ -122,7 +126,7 @@ class Mempool {
             return response
         }
 
-        if(!this.exists(request)) {
+        if(!this.existsInMempool(request)) {
             response.message = "Request not found in mempool"
             return response
         }
@@ -143,6 +147,8 @@ class Mempool {
             originalRequest.messageSignature = true
             response.status = originalRequest
             response.registerStar = true
+            // save in valid mempool objects
+            this.mempoolValid[request.address] = response
         }
 
         // remove timeout
