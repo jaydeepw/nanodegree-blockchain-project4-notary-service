@@ -1,0 +1,28 @@
+{
+  "name": "notary-service",
+  "version": "1.0.0",
+  "description": "Notary service project #4 during my pursuation of Udacity Blockchain Developer Nanodegree",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaydeepw/nanodegree-blockchain-project4-notary-service.git"
+  },
+  "author": "JaydeepW",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jaydeepw/nanodegree-blockchain-project4-notary-service/issues"
+  },
+  "homepage": "https://github.com/jaydeepw/nanodegree-blockchain-project4-notary-service#readme",
+  "dependencies": {
+    "bitcoinjs-lib": "^4.0.2",
+    "bitcoinjs-message": "^2.0.0",
+    "body-parser": "^1.18.3",
+    "crypto-js": "^3.1.9-1",
+    "express": "^4.16.4",
+    "hex2ascii": "0.0.3",
+    "level": "^4.0.0"
+  }
+}
