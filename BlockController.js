@@ -95,7 +95,7 @@ class BlockController {
         } */
         self.app.post("/requestValidation", (req, res) => {
             let data = req.body
-            console.log("req.body: " + JSON.stringify(data))
+            // console.log("req.body: " + JSON.stringify(data))
             let updatedReq = self.myMempool.addRequestValidation(data);
             res.status(201).send(updatedReq);
         });
@@ -114,8 +114,9 @@ class BlockController {
         } */
         self.app.post("/validate", (req, res) => {
             let data = req.body
-            console.log("req.body: " + JSON.stringify(data))
-            self.myMempool.validateRequestByWallet(req);
+            // console.log("req.body: " + JSON.stringify(data))
+            let invalidResponse = self.myMempool.validateRequestByWallet(req);
+            res.status(200).send(invalidResponse);
         });
     }
 

@@ -3,7 +3,8 @@ const Block = require('./Block.js')
 const bitcoinMessage = require('bitcoinjs-message'); 
 
 // Constants
-const TimeoutRequestsWindowTime = 5*60*1000    // 5 minutes
+// const TimeoutRequestsWindowTime = 5*60*1000    // 5 minutes
+const TimeoutRequestsWindowTime = 1*60*1000    // 1 minutes for testing
 
 class Mempool {
 
@@ -13,6 +14,10 @@ class Mempool {
         this.mempoolValid = []
     }
 
+    /**
+     * Check if the request exists in the Mempool
+     * @param {*} request 
+     */
     exists(request) {
         for(var key in this.mempool) {
             // console.log("key: " + key);
@@ -26,6 +31,13 @@ class Mempool {
     setValidationWindowTime(updatedRequest, timeElapse) {
         let timeLeft = (TimeoutRequestsWindowTime/1000) - timeElapse
         updatedRequest.validationWindow = timeLeft
+    }
+
+    getFromMempool(address) {
+        let request = this.mempool[address]
+        let timeElapse = (new Date().getTime().toString().slice(0,-3)) - request.requestTimeStamp
+        this.setValidationWindowTime(request, timeElapse)
+        return request
     }
 
     /**
@@ -53,6 +65,7 @@ class Mempool {
             console.log(request.address)
             console.log(request)
         } else {
+            console.log("Adding as a new request")
             console.log(new Date().getTime())
             updatedRequest.requestTimeStamp = (new Date().getTime().toString().slice(0,-3))
             let timeElapse = (new Date().getTime().toString().slice(0,-3)) - updatedRequest.requestTimeStamp
@@ -60,7 +73,6 @@ class Mempool {
 
             updatedRequest.message = updatedRequest.walletAddress + ":" + updatedRequest.requestTimeStamp
             + ":starRegistry"
-            console.log("Adding as a new request")
             this.mempool[request.address] = updatedRequest
             this.setTimeOut(updatedRequest)
         }
@@ -75,20 +87,22 @@ class Mempool {
         // console.log("Added timeout for this request")
     }
 
-    removeTimeOut() {
-        self.timeoutRequests[request.address] = null
+    removeValidationRequest(address) {
+        this.mempool[address] = null
+        console.log("Removed request from the mempool")
+        this.timeoutRequests[address] = null
+        console.log("Remove timeout for this request")
     }
-
-    removeValidationRequest(request) {
-        console.log("Removing request for address: " + address)
-        this.mempool.pop(request)
-    }
-
+    
     verifyTimeLeft(request) {
-        return (request.validationWindow > 0);
+        let originalRequest = this.mempool[request.address]
+        // console.log("originalRequest: " + JSON.stringify(originalRequest))
+        return (originalRequest != null
+            && originalRequest.validationWindow > 0);
     }
 
     validateRequestByWallet(request) {
+        request = request.body
         // Output
         /* {
             "registerStar": true,
@@ -101,20 +115,42 @@ class Mempool {
             }
         } */
 
-        let invalidResponse = {}
+        let response = {}
+
+        if(!request || !request.address) {
+            response.message = "Invalid request. Address:" + request.address
+            return response
+        }
+
+        if(!this.exists(request)) {
+            response.message = "Request not found in mempool"
+            return response
+        }
 
         // verify time left
-        if(!this.verifyTimeLeft()) {
-            invalidResponse.message = "Timedout request"
+        if(!this.verifyTimeLeft(request)) {
+            response.message = "Timedout request"
+            return response
         }
 
         // verify signature
-        /* let isValid = bitcoinMessage.verify(message, address, signature);
+        let originalRequest = this.getFromMempool(request.address)
+        let isValid = bitcoinMessage.verify(originalRequest.message, 
+            request.address, request.signature);
         if(!isValid) {
-            invalidResponse.message = "Invalid request"
-        } */
+            response.message = "Not able to verify request with address and signature"
+        } else {
+            originalRequest.messageSignature = true
+            response.status = originalRequest
+            response.registerStar = true
+        }
 
         // remove timeout
+        this.timeoutRequests[request.address] = null
+
+        // return final object to send
+        // to send to the client
+        return response
     }
 
 }
