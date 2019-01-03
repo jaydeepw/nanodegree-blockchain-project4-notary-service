@@ -15,20 +15,26 @@ class Mempool {
         this.setTimeOut(request)
 
         let updatedReq = {}
-        console.log(new Date().getTime())
-        updatedReq.requestTimeStamp = new Date().getTime()
-        console.log(updatedReq.requestTimeStamp)
         updatedReq.walletAddress = request.address
+        updatedReq.requestTimeStamp = request.requestTimeStamp
+        console.log(new Date().getTime())
+        /* = new Date().getTime()
+        console.log(updatedReq.requestTimeStamp)
+         
         let timeElapse = new Date().getTime() - request.requestTimeStamp
         console.log("timeElapse: " + timeElapse)
         let timeLeft = TimeoutRequestsWindowTime - timeElapse
         console.log("timeLeft: " + timeLeft)
-        updatedReq.validationWindow = timeLeft
+        updatedReq.validationWindow = timeLeft */
+        let timeElapse = (new Date().getTime().toString().slice(0,-3)) - request.requestTimeStamp;
+        let timeLeft = (TimeoutRequestsWindowTime/1000) - timeElapse;
+        updatedReq.validationWindow = timeLeft;
+
         updatedReq.message = request.address + ":" + request.requestTimeStamp
                             + ":starRegistry"
-        console.log("request.requestTimeStamp " + request.requestTimeStamp + 
+        /* console.log("request.requestTimeStamp " + request.requestTimeStamp + 
             " updatedReq.walletAddress " + updatedReq.walletAddress + 
-            " timeLeft " + timeLeft)
+            " timeLeft " + timeLeft) */
         return updatedReq
     }
 
