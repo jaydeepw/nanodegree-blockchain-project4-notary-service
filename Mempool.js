@@ -3,6 +3,7 @@ const Block = require('./Block.js')
 const bitcoinMessage = require('bitcoinjs-message'); 
 
 // Constants
+const TimeoutValidRequestsWindowTime = 30*60*1000    // 30 minutes
 // const TimeoutRequestsWindowTime = 5*60*1000    // 5 minutes
 const TimeoutRequestsWindowTime = 1*60*1000    // 1 minutes for testing
 
@@ -12,6 +13,7 @@ class Mempool {
         this.mempool = []
         this.timeoutRequests = []
         this.mempoolValid = []
+        this.timeoutValidRequests = []
     }
 
     /**
@@ -90,6 +92,22 @@ class Mempool {
         // console.log("Added timeout for this request")
     }
 
+    setTimeOutForValidRequests(request) {
+        let self = this;
+        this.timeoutValidRequests[request.address] = setTimeout(function() { 
+            self.removeValidRequest(request.address)
+        }, TimeoutValidRequestsWindowTime)
+        console.log("Added timeout for this valid request")
+    }
+
+    removeValidRequest(address) {
+        delete this.mempoolValid[address]
+        console.log("Removed request from the valid mempool")
+        console.log(this.mempoolValid)
+        delete this.timeoutValidRequests[address]
+        console.log("Remove timeout for this valid request")
+    }
+
     removeValidationRequest(address) {
         delete this.mempool[address]
         console.log("Removed request from the mempool")
@@ -102,7 +120,7 @@ class Mempool {
         let originalRequest = this.mempool[request.address]
         // console.log("originalRequest: " + JSON.stringify(originalRequest))
         return (originalRequest != null
-            && originalRequest.validationWindow > 0);
+            && originalRequest.validationWindow > 0)
     }
 
     validateRequestByWallet(request) {
@@ -149,6 +167,7 @@ class Mempool {
             response.registerStar = true
             // save in valid mempool objects
             this.mempoolValid[request.address] = response
+            this.setTimeOutForValidRequests(originalRequest)
         }
 
         // remove timeout
