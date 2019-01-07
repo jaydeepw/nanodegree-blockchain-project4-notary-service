@@ -18,19 +18,24 @@ you interact with the blockchain using a RESTful API.
 
 `GET /requestValidation`
 
-Description
+Requests a star notarizaiton request validation. This will return some data that
+will be needed to be used in next API call
 
 Sample
 
-**Request** `GET /block/1`
+**Request**
+```
+{
+	"address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV"
+}
+```
 
 **Response**
 ```
 {
-    "body": "Data in the block",
-    "height": 11,
-    "time": 1545736272411,
-    "previousBlockHash": "775aced2bceef18970d858b12dce556abcba578e4aad244c174f148d917457e8",
-    "hash": "e89a04a161b214d866c2c58b6b36b31f1d79f9708e26924a4c550c688acc6b15"
+    "walletAddress": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV",
+    "requestTimeStamp": "1546856892",
+    "validationWindow": 300,
+    "message": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV:1546856892:starRegistry"
 }
 ```
