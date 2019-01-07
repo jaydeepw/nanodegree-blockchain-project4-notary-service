@@ -117,7 +117,7 @@ Add the star data to the blockchain as shown in the request below.
 
 Retireve the block from the blockchain using the hash of the block
 
-`GET /stars/hash:fe3eff45c4be645767f31b480bccb19aebd273e460091c17f4ba420297e3cfc4`
+`GET /stars/hash:[HASH]`
 
 **Response**
 ```
@@ -146,7 +146,7 @@ Retireve the block from the blockchain using the address of the block.
 This API will return all the blocks that have been added using a particular
 address.
 
-`GET /stars/address:17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV`
+`GET /stars/address:[ADDRESS]`
 
 **Response**
 ```
@@ -190,9 +190,9 @@ address.
 
 ### Get block by height
 
-Retireve the block from the blockchain the height of the block.
+Retireve the block from the blockchain by the height of the block.
 
-`GET /block/2`
+`GET /block/:height`
 
 **Response**
 ```
