@@ -14,13 +14,12 @@ you interact with the blockchain using a RESTful API.
 - Your server will start locally on port `8000`
 
 ## Endpoint documentation
-### Get block by `height`
-
-`GET /requestValidation`
+### Request validation for star notarization
 
 Requests a star notarizaiton request validation. This will return some data that
 will be needed to be used in next API call
 
+`GET /requestValidation`
 Sample
 
 **Request**
