@@ -1,4 +1,5 @@
 const SHA256 = require('crypto-js/sha256');
+const hex2ascii = require('hex2ascii')
 const BlockChain = require('./BlockChain.js');
 const Block = require('./Block.js');
 const Mempool = require('./Mempool.js');
@@ -17,6 +18,7 @@ class BlockController {
         this.myBlockChain = new BlockChain.Blockchain()
         this.myMempool = new Mempool.Mempool()
         this.getBlockByIndex()
+        this.getBlockByHash()
         this.postNewBlock()
         this.requestValidation()
         this.validate()
@@ -80,7 +82,12 @@ class BlockController {
             } else if(!isValidRequest) {
                 res.status(400).send("Request not found or timed out");
             } else {
+                let starStory = block.body.star.story
+                console.log("story before: " + starStory)
+                block.body.star.story = Buffer(starStory).toString('hex')
+                console.log("story after: " + block.body.star.story)
                 self.myBlockChain.addBlock(block).then((result) => {
+                    result.body.star.storyDecoded = hex2ascii(result.body.star.story);
                     res.status(201).send(result);
                 });
             }
@@ -124,6 +131,27 @@ class BlockController {
             // console.log("req.body: " + JSON.stringify(data))
             let invalidResponse = self.myMempool.validateRequestByWallet(req);
             res.status(200).send(invalidResponse);
+        });
+    }
+
+    getBlockByHash() {
+        let self = this
+        self.app.get("/stars/:hashWithColon", (req, res) => {
+            // parse the hash from the url
+            let hashWithColon = req.params.hashWithColon
+            // console.log("Getting block for index: " + hashWithColon)
+            let hash = hashWithColon.toString().split(":")[1]
+            self.myBlockChain.getBlockByHash(hash).then((block) => {
+                block.body.star.storyDecoded = hex2ascii(block.body.star.story);
+                res.status(200).send(block)
+            }).catch((err) => {
+                console.log(err);
+                if (err.notFound) {
+                    res.status(404).send(err)
+                } else {
+                    res.status(400).send(err)
+                }
+            });
         });
     }
 

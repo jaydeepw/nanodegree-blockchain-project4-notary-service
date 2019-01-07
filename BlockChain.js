@@ -127,6 +127,25 @@ class Blockchain {
         });
     }
 
+    /**
+     * Returns the block with the given hash
+     * @param {*} hash 
+     */
+    getBlockByHash(hash) {
+        let self = this;
+        return new Promise(function(resolve, reject) {
+            self.levelDBWrapper.getBlockByHash(hash).then((block) => {
+                if(block) {
+                    resolve(block);
+                } else {
+                    reject("Invalid block");    
+                }
+            }).catch((err) => {
+                reject(err);
+            });
+        });
+    }
+
     // Validate if Block is being tampered by Block Height
     validateBlock(height) {
         let self = this;

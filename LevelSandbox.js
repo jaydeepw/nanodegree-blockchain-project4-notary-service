@@ -64,6 +64,32 @@ class LevelSandbox {
                 });
             });
     }
+
+    // method to return the block by hash
+    getBlockByHash(hash) {
+        console.log("hash: " + hash)
+        let self = this;
+        return new Promise(function(resolve, reject) {
+            let block = null;
+                self.db.createReadStream()
+                .on('data', function (data) {
+                    // console.log(data)
+                    let blockData = JSON.parse(data.value)
+                    // let blockData = data.value
+                    if(blockData.hash === hash) {
+                        block = blockData;
+                    }
+                })
+                .on('error', function (err) {
+                    // reject with error
+                    reject(err);
+                })
+                .on('close', function () {
+                    // resolve with the count value
+                    resolve(block);
+                });
+            });
+    }
 }
 
 module.exports.LevelSandbox = LevelSandbox;
