@@ -21,7 +21,6 @@ will be needed to be used in next API call
 
 `GET /requestValidation`
 
-Sample
 
 **Request**
 ```
