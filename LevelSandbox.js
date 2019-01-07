@@ -90,6 +90,31 @@ class LevelSandbox {
                 });
             });
     }
+
+    // method to return the block by hash
+    getBlockByAddress(address) {
+        console.log("address: " + address)
+        let self = this
+        return new Promise(function(resolve, reject) {
+            let blocks = [];
+                self.db.createReadStream()
+                .on('data', function (data) {
+                    // console.log(data)
+                    let blockData = JSON.parse(data.value)
+                    if(blockData.body.address === address) {
+                        blocks.push(blockData);
+                    }
+                })
+                .on('error', function (err) {
+                    // reject with error
+                    reject(err);
+                })
+                .on('close', function () {
+                    // resolve with the count value
+                    resolve(blocks);
+                });
+            });
+    }
 }
 
 module.exports.LevelSandbox = LevelSandbox;

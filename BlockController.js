@@ -29,23 +29,26 @@ class BlockController {
      */
     getBlockByIndex() {
         let self = this;
-        this.app.get("/block/:index", (req, res) => {
-            let index = req.params.index
-            console.log("Getting block for index: " + index)
+        this.app.get("/block/:height", (req, res) => {
+            let height = req.params.height
+            console.log("Getting block for index: " + height)
 
             // this serves as an optimization as we dont even
             // query the DB if index of the block to GET is -ve.
-            if(index < 0) {
+            if(height < 0) {
                 res.send("Invalid block height. Cannot be negative")
             } else {
-                self.myBlockChain.getBlockHeight().then((height) => {
-                    console.log("height of the chain: " + height);
-                    if(index > height) {
+                self.myBlockChain.getBlockHeight().then((currentHeight) => {
+                    console.log("height of the chain: " + currentHeight);
+                    if(height > currentHeight) {
                         res.send("Invalid block height")
                     } else {
-                        self.myBlockChain.getBlock(index).then((block) => {
-                            let blockJson = JSON.parse(block)
-                            res.status(200).send(blockJson)
+                        self.myBlockChain.getBlock(height).then((block) => {
+                            block = JSON.parse(block)
+                            // Making sure that each time you are 
+                            // returning a block you need to decode the star’s story
+                            block.body.star.storyDecoded = hex2ascii(block.body.star.story);
+                            res.status(200).send(block)
                         }).catch((err) => {
                             console.log(err);
                         });
@@ -141,16 +144,16 @@ class BlockController {
             let withColon = req.params.withColon
             let type = withColon.toString().split(":")[0]
             if(type === "hash") {
-                self.getBlockByHash(withColon, req, res)
+                self.getBlockByHash(withColon, res)
             } else if (type === "address") {
-                self.getBlockByAddress(withColon, req, res)
+                self.getBlockByAddress(withColon, res)
             } else {
                 console.error("Invalid type: " + type)
             }
         });
     }
 
-    getBlockByHash(withColon, req, res) {
+    getBlockByHash(withColon, res) {
         let self = this
         let hash = withColon.toString().split(":")[1]
         self.myBlockChain.getBlockByHash(hash).then((block) => {
@@ -166,12 +169,26 @@ class BlockController {
         });
     }
 
-    getBlockByAddress(withColon, req, res) {
+    getBlockByAddress(withColon, res) {
         let self = this
         let address = withColon.toString().split(":")[1]
         console.log("Getting block for address: " + address)
+        self.myBlockChain.getBlockByAddress(address).then((blocks) => {
+            // Making sure that each time you are 
+            // returning a block you need to decode the star’s story
+            blocks.forEach(block => {
+                block.body.star.storyDecoded = hex2ascii(block.body.star.story);
+            });
+            res.status(200).send(blocks)
+        }).catch((err) => {
+            console.log(err);
+            if (err.notFound) {
+                res.status(404).send(err)
+            } else {
+                res.status(400).send(err)
+            }
+        });
     }
-
 }
 
 /**

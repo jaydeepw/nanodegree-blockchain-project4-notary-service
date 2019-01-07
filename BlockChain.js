@@ -148,21 +148,21 @@ class Blockchain {
 
     /**
      * Returns the blocks by address
-     * @param {*} hash 
+     * @param {*} address 
      */
     getBlockByAddress(address) {
         let self = this;
-        console.log("address: " + address)
         return new Promise(function(resolve, reject) {
-            /* self.levelDBWrapper.getBlockByHash(hash).then((block) => {
-                if(block) {
-                    resolve(block);
+            self.levelDBWrapper.getBlockByAddress(address).then((blocks) => {
+                if(blocks) {
+                    console.log(blocks)
+                    resolve(blocks);
                 } else {
                     reject("Invalid block");    
                 }
             }).catch((err) => {
                 reject(err);
-            }); */
+            });
         });
     }
 
