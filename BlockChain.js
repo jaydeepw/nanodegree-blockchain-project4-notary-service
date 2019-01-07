@@ -146,6 +146,26 @@ class Blockchain {
         });
     }
 
+    /**
+     * Returns the blocks by address
+     * @param {*} hash 
+     */
+    getBlockByAddress(address) {
+        let self = this;
+        console.log("address: " + address)
+        return new Promise(function(resolve, reject) {
+            /* self.levelDBWrapper.getBlockByHash(hash).then((block) => {
+                if(block) {
+                    resolve(block);
+                } else {
+                    reject("Invalid block");    
+                }
+            }).catch((err) => {
+                reject(err);
+            }); */
+        });
+    }
+
     // Validate if Block is being tampered by Block Height
     validateBlock(height) {
         let self = this;

@@ -18,7 +18,7 @@ class BlockController {
         this.myBlockChain = new BlockChain.Blockchain()
         this.myMempool = new Mempool.Mempool()
         this.getBlockByIndex()
-        this.getBlockByHash()
+        this.getBlockByHashOrAddress()
         this.postNewBlock()
         this.requestValidation()
         this.validate()
@@ -134,25 +134,42 @@ class BlockController {
         });
     }
 
-    getBlockByHash() {
+    getBlockByHashOrAddress() {
         let self = this
-        self.app.get("/stars/:hashWithColon", (req, res) => {
+        self.app.get("/stars/:withColon", (req, res) => {
             // parse the hash from the url
-            let hashWithColon = req.params.hashWithColon
-            // console.log("Getting block for index: " + hashWithColon)
-            let hash = hashWithColon.toString().split(":")[1]
-            self.myBlockChain.getBlockByHash(hash).then((block) => {
-                block.body.star.storyDecoded = hex2ascii(block.body.star.story);
-                res.status(200).send(block)
-            }).catch((err) => {
-                console.log(err);
-                if (err.notFound) {
-                    res.status(404).send(err)
-                } else {
-                    res.status(400).send(err)
-                }
-            });
+            let withColon = req.params.withColon
+            let type = withColon.toString().split(":")[0]
+            if(type === "hash") {
+                self.getBlockByHash(withColon, req, res)
+            } else if (type === "address") {
+                self.getBlockByAddress(withColon, req, res)
+            } else {
+                console.error("Invalid type: " + type)
+            }
         });
+    }
+
+    getBlockByHash(withColon, req, res) {
+        let self = this
+        let hash = withColon.toString().split(":")[1]
+        self.myBlockChain.getBlockByHash(hash).then((block) => {
+            block.body.star.storyDecoded = hex2ascii(block.body.star.story);
+            res.status(200).send(block)
+        }).catch((err) => {
+            console.log(err);
+            if (err.notFound) {
+                res.status(404).send(err)
+            } else {
+                res.status(400).send(err)
+            }
+        });
+    }
+
+    getBlockByAddress(withColon, req, res) {
+        let self = this
+        let address = withColon.toString().split(":")[1]
+        console.log("Getting block for address: " + address)
     }
 
 }
