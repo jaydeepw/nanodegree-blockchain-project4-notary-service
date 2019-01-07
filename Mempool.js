@@ -4,8 +4,8 @@ const bitcoinMessage = require('bitcoinjs-message');
 
 // Constants
 const TimeoutValidRequestsWindowTime = 30*60*1000    // 30 minutes
-// const TimeoutRequestsWindowTime = 5*60*1000    // 5 minutes
-const TimeoutRequestsWindowTime = 1*60*1000    // 1 minutes for testing
+const TimeoutRequestsWindowTime = 5*60*1000    // 5 minutes
+// const TimeoutRequestsWindowTime = 1*60*1000    // 1 minutes for testing
 
 class Mempool {
 
@@ -25,6 +25,26 @@ class Mempool {
             let address = request.address
             if(key == address) {
                 let value = this.mempool[address]
+                console.log("value: " + value)
+                if(value != null) {
+                    return true
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the request exists in the Mempool array
+     * of valid requests
+     * @param {*} request 
+     */
+    existsInMempoolValid(request) {
+        for(var key in this.mempoolValid) {
+            let address = request.address
+            if(key == address) {
+                let value = this.mempoolValid[address]
                 console.log("value: " + value)
                 if(value != null) {
                     return true
@@ -176,6 +196,18 @@ class Mempool {
         // return final object to send
         // to send to the client
         return response
+    }
+
+    hasValidRequestTimedOut(request) {
+        let value = this.setTimeOutForValidRequests[request.address] == null
+        console.log("value: " + value)
+        return value
+    }
+
+    verifyAddressRequest(request) {
+        request = request.body
+        return this.existsInMempoolValid(request)
+                && this.hasValidRequestTimedOut(request)
     }
 
 }

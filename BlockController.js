@@ -69,9 +69,16 @@ class BlockController {
             let block = req.body
             console.log("req.body: " + JSON.stringify(block))
 
+            // Verify if the request validation exists and if it is valid
+            // this will check existance of this request in the 
+            // validRequests array as well as if it has timed out of 30 minutes
+            let isValidRequest = self.myMempool.verifyAddressRequest(block);
+
             if (typeof block.body === 'undefined'
                 || !block.body || block.body === "") {
                 res.send("No data for block. block.body: " + block.body)
+            } else if(!isValidRequest) {
+                res.status(400).send("Request not found or timed out");
             } else {
                 self.myBlockChain.addBlock(block).then((result) => {
                     res.status(201).send(result);
@@ -112,7 +119,7 @@ class BlockController {
         {
             "address":"19xaiMqayaNrn3x7AjV5cU4Mk5f5prRVpL"
         } */
-        self.app.post("/validate", (req, res) => {
+        self.app.post("/message-signature/validate", (req, res) => {
             let data = req.body
             // console.log("req.body: " + JSON.stringify(data))
             let invalidResponse = self.myMempool.validateRequestByWallet(req);
