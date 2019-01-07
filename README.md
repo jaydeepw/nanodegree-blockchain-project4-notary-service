@@ -38,3 +38,34 @@ will be needed to be used in next API call
     "message": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV:1546856892:starRegistry"
 }
 ```
+
+### Signing the transaction
+
+Sign the `message` field received in the response of the previous request
+using wallet like Electrum and 
+
+`GET /requestValidation`
+
+
+**Request**
+```
+{
+	"address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV",
+	"signature": "you-signature-using-wallet"
+}
+```
+
+**Response**
+```
+{
+    "status": {
+        "walletAddress": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV",
+        "requestTimeStamp": "1546857441",
+        "validationWindow": 282,
+        "message": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV:1546857441:starRegistry",
+        "messageSignature": true
+    },
+    "registerStar": true
+}
+```
+
