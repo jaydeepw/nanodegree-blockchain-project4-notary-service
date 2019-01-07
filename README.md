@@ -20,6 +20,7 @@ Requests a star notarizaiton request validation. This will return some data that
 will be needed to be used in next API call
 
 `GET /requestValidation`
+
 Sample
 
 **Request**
