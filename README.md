@@ -113,3 +113,105 @@ Add the star data to the blockchain as shown in the request below.
 }
 ```
 
+### Get block by hash
+
+Retireve the block from the blockchain using the hash of the block
+
+`GET /stars/hash:fe3eff45c4be645767f31b480bccb19aebd273e460091c17f4ba420297e3cfc4`
+
+**Response**
+```
+{
+    "body": {
+        "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV",
+        "star": {
+            "ra": "13h 03m 33.35sec",
+            "dec": "-49° 31’ 38.1”",
+            "mag": "4.83",
+            "cen": "Cen",
+            "story": "4d7920666972737420626c6f636b206265666f72652070726f64756374696f6e",
+            "storyDecoded": "My first block before production"
+        }
+    },
+    "height": 2,
+    "time": 1546856454874,
+    "previousBlockHash": "cffe3eb2e0d07e5fc9bb57335df196464c4f4d264fc93665abf30f6b3965116f",
+    "hash": "fe3eff45c4be645767f31b480bccb19aebd273e460091c17f4ba420297e3cfc4"
+}
+```
+
+### Get block by address
+
+Retireve the block from the blockchain using the address of the block.
+This API will return all the blocks that have been added using a particular
+address.
+
+`GET /stars/address:17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV`
+
+**Response**
+```
+[
+    {
+        "body": {
+            "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV",
+            "star": {
+                "ra": "13h 03m 33.35sec",
+                "dec": "-49° 31’ 38.1”",
+                "mag": "4.83",
+                "cen": "Cen",
+                "story": "4d792062656c6f766564207374617232",
+                "storyDecoded": "My beloved star2"
+            }
+        },
+        "height": 1,
+        "time": 1546856283277,
+        "previousBlockHash": "b00301d3a066693f9785c8db509c4be1b4bb28dc6c004646c597e1c3bea2f8e1",
+        "hash": "cffe3eb2e0d07e5fc9bb57335df196464c4f4d264fc93665abf30f6b3965116f"
+    },
+    {
+        "body": {
+            "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV",
+            "star": {
+                "ra": "13h 03m 33.35sec",
+                "dec": "-49° 31’ 38.1”",
+                "mag": "4.83",
+                "cen": "Cen",
+                "story": "4d7920666972737420626c6f636b206265666f72652070726f64756374696f6e",
+                "storyDecoded": "My first block before production"
+            }
+        },
+        "height": 2,
+        "time": 1546856454874,
+        "previousBlockHash": "cffe3eb2e0d07e5fc9bb57335df196464c4f4d264fc93665abf30f6b3965116f",
+        "hash": "fe3eff45c4be645767f31b480bccb19aebd273e460091c17f4ba420297e3cfc4"
+    }
+]
+```
+
+### Get block by height
+
+Retireve the block from the blockchain the height of the block.
+
+`GET /block/2`
+
+**Response**
+```
+{
+    "body": {
+        "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV",
+        "star": {
+            "ra": "13h 03m 33.35sec",
+            "dec": "-49° 31’ 38.1”",
+            "mag": "4.83",
+            "cen": "Cen",
+            "story": "4d7920666972737420626c6f636b206265666f72652070726f64756374696f6e",
+            "storyDecoded": "My first block before production"
+        }
+    },
+    "height": 2,
+    "time": 1546856454874,
+    "previousBlockHash": "cffe3eb2e0d07e5fc9bb57335df196464c4f4d264fc93665abf30f6b3965116f",
+    "hash": "fe3eff45c4be645767f31b480bccb19aebd273e460091c17f4ba420297e3cfc4"
+}
+```
+
