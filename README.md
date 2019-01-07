@@ -19,7 +19,7 @@ you interact with the blockchain using a RESTful API.
 Requests a star notarizaiton request validation. This will return some data that
 will be needed to be used in next API call
 
-`GET /requestValidation`
+`POST /requestValidation`
 
 
 **Request**
@@ -42,9 +42,9 @@ will be needed to be used in next API call
 ### Signing the transaction
 
 Sign the `message` field received in the response of the previous request
-using wallet like Electrum and 
+using wallet like Electrum and send it as a prameter in the request body.
 
-`GET /requestValidation`
+`POST /message-signature/validate`
 
 
 **Request**
