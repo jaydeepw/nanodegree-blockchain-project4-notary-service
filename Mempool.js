@@ -205,6 +205,11 @@ class Mempool {
     }
 
     verifyAddressRequest(request) {
+        if(!request
+        || request == "undefined") {
+            return false
+        }
+
         request = request.body
         return this.existsInMempoolValid(request)
                 && this.hasValidRequestTimedOut(request)

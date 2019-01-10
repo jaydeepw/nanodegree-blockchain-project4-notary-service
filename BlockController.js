@@ -74,7 +74,7 @@ class BlockController {
             let block = req.body
             console.log("req.body: " + JSON.stringify(block))
 
-            // Verify if the request validation exists and if it is valid
+            // Verify if the request validation exists and if it is valid.
             // this will check existance of this request in the 
             // validRequests array as well as if it has timed out of 30 minutes
             let isValidRequest = self.myMempool.verifyAddressRequest(block);
