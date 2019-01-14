@@ -84,6 +84,32 @@ class BlockController {
                 res.status(400).send("Request not found or timed out");
             } else {
                 let starStory = block.star.story
+
+                if(block.address == 'undefined'
+                    || block.address == "") {
+                    res.status(400).send("Address not present");
+                }
+
+                if(block.star == 'undefined'
+                    || block.star == "") {
+                    res.status(400).send("Star data not present");
+                }
+
+                if(block.star.ra == 'undefined'
+                    || block.star.ra == "") {
+                    res.status(400).send("star.ra not present");
+                }
+
+                if(block.star.dec == 'undefined'
+                    || block.star.dec == "") {
+                    res.status(400).send("star.dec not present");
+                }
+
+                if(block.star.story == 'undefined'
+                    || block.star.story == "") {
+                    res.status(400).send("star.story not present");
+                }
+
                 console.log("story before: " + starStory)
                 block.star.story = Buffer(starStory).toString('hex')
                 console.log("story after: " + block.star.story)
