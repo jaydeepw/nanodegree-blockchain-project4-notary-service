@@ -10,7 +10,7 @@ you interact with the blockchain using a RESTful API.
 ### Getting started
 - Clone this repository and `cd` into it from your terminal
 - Type `npm install`
-- Type `node app.js`
+- Type `node index.js`
 - Your server will start locally on port `8000`
 
 ## Endpoint documentation
