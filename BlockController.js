@@ -54,6 +54,9 @@ class BlockController {
                 }).catch((err) => {
                     console.log(err);
                     if (err.notFound) {
+                        // condition for invalid height
+                        // has already been handeled above
+                        // So not handling here
                         res.status(404).send(err)
                     } else {
                         res.status(400).send(err)
