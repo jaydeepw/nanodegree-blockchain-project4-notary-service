@@ -1,5 +1,5 @@
-const BlockChain = require('./BlockChain.js')
-const Block = require('./Block.js')
+const BlockChain = require('./BlockChain.js');
+const Block = require('./Block.js');
 const bitcoinMessage = require('bitcoinjs-message'); 
 
 // Constants
