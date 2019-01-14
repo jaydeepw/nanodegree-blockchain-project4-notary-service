@@ -84,28 +84,31 @@ class BlockController {
                 res.status(400).send("Request not found or timed out");
             } else {
                 let starStory = block.star.story
+                console.log("ra: " + block.star.ra)
 
-                if(block.address == 'undefined'
+                // Before you use the data, you have to check if the request contains 
+                // address, star, ra, dec and story. (They should not be undefined or "")
+                if(typeof block.address === 'undefined'
                     || block.address == "") {
                     res.status(400).send("Address not present");
                 }
 
-                if(block.star == 'undefined'
+                if(typeof block.star === 'undefined'
                     || block.star == "") {
                     res.status(400).send("Star data not present");
                 }
 
-                if(block.star.ra == 'undefined'
+                if(typeof block.star.ra === 'undefined'
                     || block.star.ra == "") {
-                    res.status(400).send("star.ra not present");
+                    res.status(400).send("star.ra not present")
                 }
 
-                if(block.star.dec == 'undefined'
+                if(typeof block.star.dec === 'undefined'
                     || block.star.dec == "") {
                     res.status(400).send("star.dec not present");
                 }
 
-                if(block.star.story == 'undefined'
+                if(typeof block.star.story === 'undefined'
                     || block.star.story == "") {
                     res.status(400).send("star.story not present");
                 }
@@ -114,14 +117,11 @@ class BlockController {
                 block.star.story = Buffer(starStory).toString('hex')
                 console.log("story after: " + block.star.story)
                 self.myBlockChain.addBlock(block).then((result) => {
-                    /* console.log(JSON.stringify(result))
-                    result.star.storyDecoded = hex2ascii(result.star.story);
-                    result.body = {}
-                    result.body.star = result.star
-                    delete result.star
-                    result.body.address = result.address
-                    delete result.address
-                    console.log(JSON.stringify(result)) */
+                    // After the block is added successfully, you have to remove the 
+                    // permission to add further blocks for that address because a user 
+                    // is only permitted to add a single star after validation. 
+                    // Afterwards, the user has to restart the validation process.
+                    self.myMempool.removeValidationRequest(block.address)
                     let newResult = this.getCorrectedResponse(result)
                     res.status(201).send(newResult);
                 });
