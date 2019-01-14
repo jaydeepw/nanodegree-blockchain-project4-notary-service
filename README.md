@@ -33,9 +33,9 @@ will be needed to be used in next API call
 ```
 {
     "walletAddress": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV",
-    "requestTimeStamp": "1546856892",
-    "validationWindow": 300,
-    "message": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV:1546856892:starRegistry"
+    "requestTimeStamp": "1547449250",
+    "validationWindow": 279,
+    "message": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV:1547449250:starRegistry"
 }
 ```
 
@@ -59,11 +59,11 @@ using wallet like Electrum and send it as a prameter in the request body.
 ```
 {
     "status": {
-        "walletAddress": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV",
-        "requestTimeStamp": "1546857441",
-        "validationWindow": 282,
-        "message": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV:1546857441:starRegistry",
-        "messageSignature": true
+        "requestTimeStamp": "1547449250",
+        "validationWindow": 248,
+        "message": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV:1547449250:starRegistry",
+        "messageSignature": true,
+        "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV"
     },
     "registerStar": true
 }
@@ -79,24 +79,25 @@ Add the star data to the blockchain as shown in the request below.
 **Request**
 ```
 {
-    "body" : {
-        "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV",
-        "star": {
-              "ra": "13h 03m 33.35sec",
-              "dec": "-49° 31’ 38.1”",
-              "mag": "4.83",
-              "cen": "Cen",
-              "story": "My first block before production"
-        }
-	}
+    "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV",
+    "star": {
+          "ra": "13h 03m 33.35sec",
+          "dec": "-49° 31’ 38.1”",
+          "mag": "4.83",
+          "cen": "Cen",
+          "story": "My first block before production"
+    }
 }
 ```
 
 **Response**
 ```
 {
+    "height": 22,
+    "time": 1547449366339,
+    "previousBlockHash": "f14fb3a565e77938407026dbbf0993c268e2931c7648b7ce77312b5b6dd91258",
+    "hash": "e2abdf01c45ff4c67b20792e8db5bec3f6bbf1ca3880d4f1d0d750067b76fada",
     "body": {
-        "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV",
         "star": {
             "ra": "13h 03m 33.35sec",
             "dec": "-49° 31’ 38.1”",
@@ -104,12 +105,9 @@ Add the star data to the blockchain as shown in the request below.
             "cen": "Cen",
             "story": "4d7920666972737420626c6f636b206265666f72652070726f64756374696f6e",
             "storyDecoded": "My first block before production"
-        }
-    },
-    "height": 2,
-    "time": 1546856454874,
-    "previousBlockHash": "cffe3eb2e0d07e5fc9bb57335df196464c4f4d264fc93665abf30f6b3965116f",
-    "hash": "fe3eff45c4be645767f31b480bccb19aebd273e460091c17f4ba420297e3cfc4"
+        },
+        "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV"
+    }
 }
 ```
 
@@ -122,8 +120,11 @@ Retireve the block from the blockchain using the hash of the block
 **Response**
 ```
 {
+    "height": 22,
+    "time": 1547449366339,
+    "previousBlockHash": "f14fb3a565e77938407026dbbf0993c268e2931c7648b7ce77312b5b6dd91258",
+    "hash": "e2abdf01c45ff4c67b20792e8db5bec3f6bbf1ca3880d4f1d0d750067b76fada",
     "body": {
-        "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV",
         "star": {
             "ra": "13h 03m 33.35sec",
             "dec": "-49° 31’ 38.1”",
@@ -131,12 +132,9 @@ Retireve the block from the blockchain using the hash of the block
             "cen": "Cen",
             "story": "4d7920666972737420626c6f636b206265666f72652070726f64756374696f6e",
             "storyDecoded": "My first block before production"
-        }
-    },
-    "height": 2,
-    "time": 1546856454874,
-    "previousBlockHash": "cffe3eb2e0d07e5fc9bb57335df196464c4f4d264fc93665abf30f6b3965116f",
-    "hash": "fe3eff45c4be645767f31b480bccb19aebd273e460091c17f4ba420297e3cfc4"
+        },
+        "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV"
+    }
 }
 ```
 
@@ -152,25 +150,11 @@ address.
 ```
 [
     {
+        "height": 10,
+        "time": 1547443410056,
+        "previousBlockHash": "83b0a5c0c736f4358c98a78ca88176dc03c9fb28f928428870c43ce32230be2d",
+        "hash": "5481268332618e6bcbc94dbda02a0c210ca0784283548897daa28ee310df2dfc",
         "body": {
-            "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV",
-            "star": {
-                "ra": "13h 03m 33.35sec",
-                "dec": "-49° 31’ 38.1”",
-                "mag": "4.83",
-                "cen": "Cen",
-                "story": "4d792062656c6f766564207374617232",
-                "storyDecoded": "My beloved star2"
-            }
-        },
-        "height": 1,
-        "time": 1546856283277,
-        "previousBlockHash": "b00301d3a066693f9785c8db509c4be1b4bb28dc6c004646c597e1c3bea2f8e1",
-        "hash": "cffe3eb2e0d07e5fc9bb57335df196464c4f4d264fc93665abf30f6b3965116f"
-    },
-    {
-        "body": {
-            "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV",
             "star": {
                 "ra": "13h 03m 33.35sec",
                 "dec": "-49° 31’ 38.1”",
@@ -178,12 +162,26 @@ address.
                 "cen": "Cen",
                 "story": "4d7920666972737420626c6f636b206265666f72652070726f64756374696f6e",
                 "storyDecoded": "My first block before production"
-            }
-        },
-        "height": 2,
-        "time": 1546856454874,
-        "previousBlockHash": "cffe3eb2e0d07e5fc9bb57335df196464c4f4d264fc93665abf30f6b3965116f",
-        "hash": "fe3eff45c4be645767f31b480bccb19aebd273e460091c17f4ba420297e3cfc4"
+            },
+            "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV"
+        }
+    },
+    {
+        "height": 11,
+        "time": 1547443624653,
+        "previousBlockHash": "5481268332618e6bcbc94dbda02a0c210ca0784283548897daa28ee310df2dfc",
+        "hash": "388179f931d88089dccca2c76c073a0ac79ca3a38683187909ecb3a482ab9c8c",
+        "body": {
+            "star": {
+                "ra": "13h 03m 33.35sec",
+                "dec": "-49° 31’ 38.1”",
+                "mag": "4.83",
+                "cen": "Cen",
+                "story": "4d7920666972737420626c6f636b206265666f72652070726f64756374696f6e",
+                "storyDecoded": "My first block before production"
+            },
+            "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV"
+        }
     }
 ]
 ```
@@ -197,8 +195,11 @@ Retireve the block from the blockchain by the height of the block.
 **Response**
 ```
 {
+    "height": 22,
+    "time": 1547449366339,
+    "previousBlockHash": "f14fb3a565e77938407026dbbf0993c268e2931c7648b7ce77312b5b6dd91258",
+    "hash": "e2abdf01c45ff4c67b20792e8db5bec3f6bbf1ca3880d4f1d0d750067b76fada",
     "body": {
-        "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV",
         "star": {
             "ra": "13h 03m 33.35sec",
             "dec": "-49° 31’ 38.1”",
@@ -206,12 +207,9 @@ Retireve the block from the blockchain by the height of the block.
             "cen": "Cen",
             "story": "4d7920666972737420626c6f636b206265666f72652070726f64756374696f6e",
             "storyDecoded": "My first block before production"
-        }
-    },
-    "height": 2,
-    "time": 1546856454874,
-    "previousBlockHash": "cffe3eb2e0d07e5fc9bb57335df196464c4f4d264fc93665abf30f6b3965116f",
-    "hash": "fe3eff45c4be645767f31b480bccb19aebd273e460091c17f4ba420297e3cfc4"
+        },
+        "address": "17rsJAF4TyXbbHuasJCXQd8syQ2wkkutwV"
+    }
 }
 ```
 

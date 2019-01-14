@@ -101,7 +101,7 @@ class LevelSandbox {
                 .on('data', function (data) {
                     // console.log(data)
                     let blockData = JSON.parse(data.value)
-                    if(blockData.body.address === address) {
+                    if(blockData.address === address) {
                         blocks.push(blockData);
                     }
                 })

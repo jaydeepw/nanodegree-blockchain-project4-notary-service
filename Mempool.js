@@ -184,6 +184,8 @@ class Mempool {
         } else {
             originalRequest.messageSignature = true
             response.status = originalRequest
+            response.status.address = originalRequest.walletAddress
+            delete response.status.walletAddress
             response.registerStar = true
             // save in valid mempool objects
             this.mempoolValid[request.address] = response
@@ -210,7 +212,7 @@ class Mempool {
             return false
         }
 
-        request = request.body
+        // request = request.body
         return this.existsInMempoolValid(request)
                 && this.hasValidRequestTimedOut(request)
     }

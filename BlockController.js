@@ -45,10 +45,8 @@ class BlockController {
                     } else {
                         self.myBlockChain.getBlock(height).then((block) => {
                             block = JSON.parse(block)
-                            // Making sure that each time you are 
-                            // returning a block you need to decode the star’s story
-                            block.body.star.storyDecoded = hex2ascii(block.body.star.story);
-                            res.status(200).send(block)
+                            let newResult = this.getCorrectedResponse(block)
+                            res.status(200).send(newResult)
                         }).catch((err) => {
                             console.log(err);
                         });
@@ -79,22 +77,43 @@ class BlockController {
             // validRequests array as well as if it has timed out of 30 minutes
             let isValidRequest = self.myMempool.verifyAddressRequest(block);
 
-            if (typeof block.body === 'undefined'
+            /* if (typeof block.body === 'undefined'
                 || !block.body || block.body === "") {
                 res.send("No data for block. block.body: " + block.body)
-            } else if(!isValidRequest) {
+            } else */ if(!isValidRequest) {
                 res.status(400).send("Request not found or timed out");
             } else {
-                let starStory = block.body.star.story
+                let starStory = block.star.story
                 console.log("story before: " + starStory)
-                block.body.star.story = Buffer(starStory).toString('hex')
-                console.log("story after: " + block.body.star.story)
+                block.star.story = Buffer(starStory).toString('hex')
+                console.log("story after: " + block.star.story)
                 self.myBlockChain.addBlock(block).then((result) => {
-                    result.body.star.storyDecoded = hex2ascii(result.body.star.story);
-                    res.status(201).send(result);
+                    /* console.log(JSON.stringify(result))
+                    result.star.storyDecoded = hex2ascii(result.star.story);
+                    result.body = {}
+                    result.body.star = result.star
+                    delete result.star
+                    result.body.address = result.address
+                    delete result.address
+                    console.log(JSON.stringify(result)) */
+                    let newResult = this.getCorrectedResponse(result)
+                    res.status(201).send(newResult);
                 });
             }
         });
+    }
+
+    getCorrectedResponse(result) {
+        // Making sure that each time you are 
+        // returning a block you need to decode the star’s story
+        result.star.storyDecoded = hex2ascii(result.star.story);
+        result.body = {}
+        result.body.star = result.star
+        delete result.star
+        result.body.address = result.address
+        delete result.address
+        console.log(JSON.stringify(result))
+        return result
     }
 
     /**
@@ -157,8 +176,9 @@ class BlockController {
         let self = this
         let hash = withColon.toString().split(":")[1]
         self.myBlockChain.getBlockByHash(hash).then((block) => {
-            block.body.star.storyDecoded = hex2ascii(block.body.star.story);
-            res.status(200).send(block)
+            // block.body.star.storyDecoded = hex2ascii(block.body.star.story);
+            let result = this.getCorrectedResponse(block)
+            res.status(200).send(result)
         }).catch((err) => {
             console.log(err);
             if (err.notFound) {
@@ -177,7 +197,8 @@ class BlockController {
             // Making sure that each time you are 
             // returning a block you need to decode the star’s story
             blocks.forEach(block => {
-                block.body.star.storyDecoded = hex2ascii(block.body.star.story);
+                // block.body.star.storyDecoded = hex2ascii(block.body.star.story);
+                let result = this.getCorrectedResponse(block)
             });
             res.status(200).send(blocks)
         }).catch((err) => {
