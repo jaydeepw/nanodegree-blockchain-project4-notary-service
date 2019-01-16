@@ -122,10 +122,11 @@ class Mempool {
 
     removeValidRequest(address) {
         delete this.mempoolValid[address]
-        console.log("Removed request from the valid mempool")
-        console.log(this.mempoolValid)
+        // console.log("Removed request from the valid mempool")
+        // console.log("this.mempoolValid[address] : " + this.mempoolValid[address])
         delete this.timeoutValidRequests[address]
-        console.log("Remove timeout for this valid request")
+        // console.log("Remove timeout for this valid request")
+        // console.log("this.timeoutValidRequests[address]: " + this.timeoutValidRequests[address])
     }
 
     removeValidationRequest(address) {

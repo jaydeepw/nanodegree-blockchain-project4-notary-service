@@ -125,6 +125,7 @@ class BlockController {
                     // is only permitted to add a single star after validation. 
                     // Afterwards, the user has to restart the validation process.
                     self.myMempool.removeValidationRequest(block.address)
+                    self.myMempool.removeValidRequest(block.address)
                     let newResult = this.getCorrectedResponse(result)
                     res.status(201).send(newResult);
                 });
